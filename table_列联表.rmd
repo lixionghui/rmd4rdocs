@@ -1,0 +1,40 @@
+---
+title: "table"
+author: "lxh"
+date: "2015年9月8日"
+output: html_document
+---
+
+对factor分类属性统计其frequency distribution
+
+ 
+
+计算列联表table：uses the cross-classifying factors to build a contingency table of the counts at each combination of factor levels
+
+统计每对factor水平组合出现的次数。
+
+ 
+
+table(x,y)
+
+1.x与y同属一个data的两列，都是factor list时：以表的形式列出没对factor水平组合在data中出现的次数
+
+2.x和y是两独立等长的列向量：类似用cbind(x,y)生成一个两列data，统计每对factor水平组合在data中出现的次数
+
+ 
+
+在回归模型中，若包含了两个名义变量，在研究其相互影响之前，常使用table函数统计各组观察值的数量关系。
+
+ 
+
+table函数的结果为一个table
+
+可应用以下函数：
+
+（1）prop.table(tableX)：将tableX转换为百分比proportion
+
+（2）prop.table(tableX,1)：将tableX按行求百分比
+
+（3）prop.table(tableX,2)：将tableX按列求百分比
+
+（4）fisher.test(tableX)：Fisher Exact Test of independency 

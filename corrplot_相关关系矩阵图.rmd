@@ -1,0 +1,28 @@
+---
+title: "corrplot"
+author: "lxh"
+date: "Tuesday, October 28, 2014"
+output: html_document
+---
+
+
+```{r}
+# `corrlot`包，可视化相关性矩阵
+library("corrplot")
+
+# 计算各列相关性
+corr <- cor(mtcars)
+
+# 绘制相关性矩阵图
+corrplot(corr)
+
+# 参数 method 可以控制显示不同的形状，默认是圆形
+corrplot(corr,method="circle")
+corrplot(corr,method="square")
+corrplot(corr,method="ellipse")
+corrplot(corr,method="number")
+corrplot(corr,method="shade")
+corrplot(corr,method="color")
+corrplot(corr,method="pie")
+```
+

@@ -1,0 +1,256 @@
+---
+title: plyr
+layout: default
+---
+
+# 实用函数
+
+
+```{r}
+library(plyr)
+```
+
+`each(...)()` 返回每个函数对应的值（返回值必须唯一）。
+
+```{r}
+# Call min() and max() on the vector 1:10
+each(min, max)(1:10)
+# This syntax looks a little different.  It is shorthand for the
+# the following:
+f<- each(min, max)
+f(1:10)
+# Three equivalent ways to call min() and max() on the vector 1:10
+each("min", "max")(1:10)
+each(c("min", "max"))(1:10)
+each(c(min, max))(1:10)
+# Call length(), min() and max() on a random normal vector
+each(length, mean, var)(rnorm(100))
+```
+
+
+`colwise(...)()` 对列使用函数，并返回相应的值。
+```{r}
+# 对 mtcars 中的每列，使用函数 mean()，返回每列的 均值。colwise(...)中的函数，只能有一个。
+colwise(max)(mtcars)
+
+# Count number of missing values
+nmissing <- function(x) sum(is.na(x))
+
+# Apply to every column in a data frame
+colwise(nmissing)(baseball)
+# colwise(sum(is.na))(mtcars) 是错的，只能是一个已定义的函数，不能是函数表达式、复合函数
+# This syntax looks a little different.  It is shorthand for the
+# the following:
+f <- colwise(nmissing)
+f(baseball)
+
+# 结合 d*ply 函数会很有用
+# 按某列中的值，分组统计每列对应组的函数值
+# This is particularly useful in conjunction with d*ply
+ddply(baseball, .(year), colwise(nmissing))
+
+# 可以选择只对其中几列汇总分组计算
+# To operate only on specified columns, supply them as the second
+# argument.  Many different forms are accepted.
+ddply(baseball, .(year), colwise(nmissing, .(sb, cs, so)))
+ddply(baseball, .(year), colwise(nmissing, c("sb", "cs", "so")))
+ddply(baseball, .(year), colwise(nmissing, ~ sb + cs + so))
+
+# 可以只对其中某种类型的列做分组计算，列的类型通过逻辑函数来判断
+# Alternatively, you can specify a boolean function that determines
+# whether or not a column should be included
+ddply(baseball, .(year), colwise(nmissing, is.character))
+ddply(baseball, .(year), colwise(nmissing, is.numeric))
+ddply(baseball, .(year), colwise(nmissing, is.discrete))
+
+# 对连续值类型和零散值类型列的计算较为常用，故而有两个快键函数 numcolwise(...)() 和 catcolwise(...)()
+# These last two cases are particularly common, so some shortcuts are
+# provided:
+numcolwise(nmissing)(baseball)
+catcolwise(nmissing)(baseball)
+ddply(baseball, .(year), numcolwise(nmissing))
+ddply(baseball, .(year), catcolwise(nmissing))
+
+# 可以在计算函数中，指定该函数的额外参数，在colwise()中，或者在数据对象中
+# You can supply additional arguments to either colwise, or the function
+# it generates:
+numcolwise(mean)(baseball, na.rm = TRUE)
+numcolwise(mean, na.rm = TRUE)(baseball)
+
+```
+
+## arrange()
+
+`arrange()` 可以对数据框重排序，类似于SQL中的order by关键字。
+
+### Examples
+```{r}
+# sort mtcars data by cylinder and displacement
+mtcars[with(mtcars, order(cyl, disp)), ]
+# Same result using arrange: no need to use with(), as the context is implicit
+# NOTE: plyr functions do NOT preserve row.names
+arrange(mtcars, cyl, disp)
+# Let's keep the row.names in this example
+myCars = cbind(vehicle=row.names(mtcars), mtcars)
+arrange(myCars, cyl, disp)
+# Sort with displacement in descending order
+# desc关键字是倒序
+arrange(myCars, cyl, desc(disp))
+```
+
+
+`rename()`将对象中的名字重命名，并返回重命名后的对象结果（原对象结果保持不变，除非将重命名后的结果复制给原对象。
+
+特点：按变量名而不是变量位置重命名。
+
+```{r}
+x <- c("a" = 1, "b" = 2, d = 3, 4)
+# Rename column d to "c", updating the variable "x" with the result
+x <- rename(x, replace=c("d" = "c"))
+
+# Rename column "disp" to "displacement"
+rename(mtcars, c("disp" = "displacement"))
+```
+
+`count()`返回数据框中变量的不同值的计数结果。
+
+用法：
+
+count(df, vars = NULL, wt_var = NULL)
+
+参数：
+
+df  ：data frame to be processed
+
+vars	：variables to count unique values of
+
+wt_var	：optional variable to weight by - if this is non-NULL, count will sum up the value of this variable for each combination of id variables.
+
+示例：
+```{r}
+# Count of each value of "id" in the first 100 cases
+count(baseball[1:100,], vars = "id")
+# Count of ids, weighted by their "g" loading
+count(baseball[1:100,], vars = "id", wt_var = "g")
+count(baseball, "id", "ab")
+count(baseball, "lg")
+# How many stints do players do?
+count(baseball, "stint")
+# Count of times each player appeared in each of the years they played
+count(baseball[1:100,], c("id", "year"))
+# Count of counts
+count(count(baseball[1:100,], c("id", "year")), "id", "freq")
+count(count(baseball, c("id", "year")), "freq")
+```
+
+
+
+## match_df()
+
+Extract matching rows of a data frame.
+
+### Description
+
+Match works in the same way as join, but instead of return the combined dataset, it only returns the matching rows from the first dataset. This is particularly useful when you've summarised the data in some way and want to subset the original data by a characteristic of the subset.
+
+### Usage
+
+match_df(x, y, on = NULL)
+Arguments
+
+x  
+data frame to subset.
+
+y	
+data frame defining matching rows.
+
+on	
+variables to match on - by default will use all variables common to both data frames.
+
+### Details
+
+match_df shares the same semantics as join, not match:
+
+the match criterion is ==, not identical).
+
+it doesn't work for columns that are not atomic vectors
+
+if there are no matches, the row will be omitted'
+
+### Value
+
+a data frame
+
+See Also
+
+join to combine the columns from both x and y and match for the base function selecting matching items
+
+### Examples
+```{r}
+# count the occurrences of each id in the baseball dataframe, then get the subset with a freq >25
+longterm <- subset(count(baseball, "id"), freq > 25)
+# longterm
+#             id freq
+# 30   ansonca01   27
+# 48   baineha01   27
+# ...
+# Select only rows from these longterm players from the baseball dataframe
+# (match would default to match on shared column names, but here was explicitly set "id")
+bb_longterm <- match_df(baseball, longterm, on="id")
+bb_longterm[1:5,]
+```
+
+## join()
+
+Join two data frames together.
+
+### Description
+
+Join, like merge, is designed for the types of problems where you would use a sql join.
+
+### Usage
+
+join(x, y, by = NULL, type = "left", match = "all")
+Arguments
+
+x  
+data frame
+
+y	
+data frame
+
+by	
+character vector of variable names to join by. If omitted, will match on all common variables.
+
+type	
+type of join: left (default), right, inner or full. See details for more information.
+
+match	
+how should duplicate ids be matched? Either match just the "first" matching row, or match "all" matching rows. Defaults to "all" for compatibility with merge, but "first" is significantly faster.
+
+### Details
+
+The four join types return:
+
+inner: only rows with matching keys in both x and y
+
+left: all rows in x, adding matching columns from y
+
+right: all rows in y, adding matching columns from x
+
+full: all rows in x with matching columns in y, then the rows of y that don't match x.
+
+Note that from plyr 1.5, join will (by default) return all matches, not just the first match, as it did previously.
+
+Unlike merge, preserves the order of x no matter what join type is used. If needed, rows from y will be added to the bottom. Join is often faster than merge, although it is somewhat less featureful - it currently offers no way to rename output or merge on different variables in the x and y data frames.
+
+### Examples
+```{r}
+first <- ddply(baseball, "id", summarise, first = min(year))
+system.time(b2 <- merge(baseball, first, by = "id", all.x = TRUE))
+system.time(b3 <- join(baseball, first, by = "id"))
+
+b2 <- arrange(b2, id, year, stint)
+b3 <- arrange(b3, id, year, stint)
+stopifnot(all.equal(b2, b3))
+```

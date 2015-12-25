@@ -1,0 +1,47 @@
+---
+layout: default
+title: 简介与目录
+---
+
+## R语言简介
+
+* [《R，不仅仅是一种语》](http://www.wentrue.net/blog/?p=1083)：R 语言的介绍，作者不周山，原载于《程序员》杂志2010年第8期。
+* [《R的若干基因及争论》](http://yihui.name/cn/2012/09/equal-and-arrow/)：作者谢益辉
+
+## R Software & IDE
+* [R Project](http://www.r-project.org) & [CRAN](http://cran.r-project.org)
+
+* [RStudio](https://www.rstudio.com/)
+* [Revolution Analytics](http://www.revolutionanalytics.com)
+
+## 课程教学
+* [Try R: Code School](http://tryr.codeschool.com)
+* [R Programming | Coursera](https://www.coursera.org/course/rprog) [（网易公开课/R语言编程/Coursera中文官方社区)](http://c.open.163.com/coursera/courseIntro.htm?cid=1299&tabNoJmp=1)
+* [更多](http://r-notes.duanziwang.net/lectures.html)
+
+## 编码风格
+* [Google's R Style Guide](https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml)  [(中文)](http://bbs.pinggu.org/thread-1410518-1-1.html)
+
+
+## 参考书籍
+* [《R语言实战》](http://book.douban.com/subject/20382244/)：适合初学者，建议购买
+* [《ggplot2：数据分析与图形艺术》](http://book.douban.com/subject/24527091/)：ggplot2作者介绍了图形语法，建议购买
+* [《R数据可视化手册》](http://book.douban.com/subject/25873705/)：绝大多数的绘图案例都是以强大、灵活制图而著称的R包ggplot2实现的；英文原版有电子版本，建议下载作为工具书查阅
+* [《Advanced R programming》](http://adv-r.had.co.nz/)：适合R语言开发者，目前是在线开源的电子书
+
+
+
+
+## 章节目录
+
+<ul class="toc">
+  {% include chapter-nav.html %}
+</ul>
+
+
+
+## R包实践
+
+<ul class="toc">
+  {% include packages-nav.html %}
+</ul>

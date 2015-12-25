@@ -1,0 +1,52 @@
+---
+title: "zh-cn_fonts_中文显示与字体"
+author: "lxh"
+date: "2015年7月28日"
+output: html_document
+---
+
+CairoPDF(file = ifelse(onefile, "Rplots.pdf","Rplot%03d.pdf"),
+         width = 6, height = 6, onefile = TRUE, family = "Helvetica",
+         title = "R Graphics Output", fonts = NULL, version = "1.1",
+         paper = "special", encoding, bg, fg, pointsize, pagecentre)
+
+library(Cairo);
+CairoPDF();
+library(Cairo);
+CairoPDF();
+plot(1:10,1:10,type="n");
+text(2,10,"宋体",family="SimSun");
+text(2,8,"黑体",family="SimHei");
+text(2,6,"楷体",family="KaiTi_GB2312");
+text(2,4,"隶书",family="LiSu");
+text(2,2,"幼圆",family="YouYuan");
+text(6,10,"Arial",family="Arial");
+text(6,8,"Times New Roman",family="Times New Roman");
+text(6,6,"Courier New",family="Courier New");
+text(6,4,"Consolas",family="Consolas");
+text(6,2,"Symbol",family="Symbol");
+dev.off();
+dev.off();
+
+
+library(ggplot2)
+library(Cairo)
+
+CairoPDF(file = "mtcars_plot.pdf")
+
+p <- ggplot(data = mtcars, aes(x=wt, y=mpg))
+p + geom_point() +
+  labs(title = "32种车型的油耗效率", x = "重量 (x1000 lb)", y = "每加仑行驶公里数") +
+  theme(plot.title = element_text(family="Microsoft YaHei", size=20),
+        axis.title.y = element_text(family="simhei", size=14),
+        axis.title.x = element_text(family="simsun", size=14))
+
+# 此种情况下，element_text() 中的 face 参数无效
+# ("plain", "italic", "bold", "bold.italic") 斜体、粗体无法显示
+dev.off()
+
+How to use your favorite fonts in R charts
+install.packages("extrafont")
+library(extrafont)
+font_import()
+names(pdfFont()) # 已经有中文字体，如"Microsoft YaHei"，但依然不能成功；只能使用“GB1”能显示中文，但不能真正指定字体，且英文字体也很怪异。

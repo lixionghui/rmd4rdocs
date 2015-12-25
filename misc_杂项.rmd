@@ -1,0 +1,37 @@
+
+# 缺失值
+
+更多
+http://blog.csdn.net/lilanfeng1991/article/details/36467891
+
+
+```{r}
+# 剔除缺失值所在行
+na.omit()
+
+# 判断元素是否为缺失值
+is.na()
+
+# 判断对象中是否包含有缺失值
+anyNA()
+
+```
+
+# 排列组合
+组合数：choose(n, k)
+注意：从n个中选出k个
+阶乘（k！）：factorial(k)
+排列数：choose(n, k) * factorial(k)
+幂 ： ^
+余数： %%
+整数商：%/%
+combn(x,n) -- 列出所有组合数矩阵
+t(combn(x,n)) -- 将结果转置，每行内容就是组合数
+
+```{r}
+
+
+x <- 20:33
+n <- 5
+m <- t(combn(x,n))
+```

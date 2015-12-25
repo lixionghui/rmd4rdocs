@@ -1,0 +1,24 @@
+---
+title: "factor_因子向量"
+author: "lxh"
+date: "2015年7月28日"
+output: html_document
+---
+
+因子：名义变量，有序变量
+名义变量：性别、省份、职业
+有序变量：名次
+
+因子函数
+factor() 将向量编码成为因子
+
+unique() 向量中唯一的值
+levels() 因子的水平
+异同：levels()针对factor，unique()针对一般的 vector, data frame or array
+
+
+is.factor() 检验对象是否为因子
+
+as.factor() 将向量转换为因子
+
+table() 统计各水平的频次

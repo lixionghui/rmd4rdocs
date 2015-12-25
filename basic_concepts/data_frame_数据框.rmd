@@ -1,0 +1,229 @@
+---
+title: 数据框基础
+layout: default
+---
+
+
+数据框(`data.frame`)是R语言中最常见的数据结构，与常见的 Excel 数据表格、关系型数据库表非常相似。
+数据框由多个长度相等的向量构成，向量的模式可以不同。
+
+## 数据框定义
+
+`data.frame()` 函数，可以将多个等长度的向量组合创建未一个数据框。函数中的每个参数的名称，就是字段名称，每个参数的值（向量），是字段的值（内容）。
+
+```{r data.frame_defination}
+num_var <- c(1.6, 4.8, 2.5)
+
+int_var <- c(6, 9, 1)
+
+log_var <- c(TRUE, FALSE, TRUE)
+
+chr_var <- c("setosa", "versicolor", "virginica")
+
+df <- data.frame(num = num_var, int = int_var, log = log_var, chr = chr_var, stringsAsFactors = FALSE)
+df
+```
+
+`data.frame()` 函数中的参数 `stringsAsFactors`，是设定是否将字符型向量，转换为因子向量。
+
+## 类
+
+所谓的"数据框(`data.frame`)"，指的是对象的"`类`"。
+
+```{r data.frame_class}
+class(df)
+```
+
+从 `类型`和`模式`上来将，数据框实际上是列表。
+```{r data.frame_typeof_mode}
+typeof(df)
+mode(df)
+```
+
+概括来说，数据框是一种“`data.frame`”类的`列表`；其特征是全部由向量构成，其向量的长度（元素个数）相同。
+
+对于列表和数据框，其中的元素通常称为`分量`（`components`）。在数据库中访问`列分量`，只需要`$`符号即可。
+```{r data.frame_components}
+df$num
+df$chr
+```
+
+
+
+## 行列数
+
+数据框是就是关系型数据表，在数据库系统中通常称为`记录`和`字段`，在EXCEL数据表中有`行`和`列`，在统计上称为`观测(observation)`和`变量(variable)`。
+数据库的行列数：
+```{r data.frame_obs_variable}
+nrow(df) #行数
+ncol(df) #列数
+```
+
+## 属性
+
+数据框有三个基本属性(`attributes`)：变量名称(`names`),   记录名称(`row.names`), 类名称(`class`)。
+
+```{r data.frame_attributes}
+attributes(df) #返回对象的属性
+```
+
+`names()`和`row.names()`返回数据库行列名称，并可用一个自定义的向量名称取代，达到重命名的目的。
+
+注：在矩阵中，行列名通常使用 `colnames()` 和 `rownames()` 函数获取。
+
+```{r data.frame_names}
+names(df) #返回数据框的列（变量）名称
+row.names(df) #返回数据框的行（记录）名称，默认的名称是从1到nrow()的序列，行名称是可以指定的，有时很有用
+
+rndf<- df
+names(rndf) <- c("numeric", "integer", "logical", "character")
+row.names(rndf) <- c("first", "second", "third")
+names(rndf)
+row.names(rndf)
+```
+
+
+## 合并数据框
+
+`cbind()` 是将两个数据框，按行合并多列；两个数据框的行数要相同。
+ 
+`rbind()` 是将两个数据框，按列合并多行；两个数据框的列数要相同。
+
+
+* `cbind()` 按列合并。
+```{r data.frame_cbind}
+df_1 <- data.frame(lift = c(29, 19, 33), freq = c(0.04, 0.24, 0.16))
+
+df_c <- cbind(df, df_1) # 可以有更多个对象，按顺序从左到右合并
+
+df_c
+```
+
+* `rbind()` 按行合并。
+```{r data.frame_rbind}
+df_2 <- data.frame(num = c(2.7, 3.4), int = c(3,5), log = c(FALSE, TRUE), chr = c("setosa", "versicolor"))
+
+df_r <- rbind(df, df_2) # 可以有更多个对象，按顺序从上(左)到下(右)合并
+
+df_r
+```
+
+`merge()` 是在多个数据框中，按相同的行或者列作为连接键，进行合并的操作。类似与数据框中的`join`操作。在扩展包 `ddplyr` 中有 `join()` 函数，更为便捷。
+
+## 头尾行
+
+`head()` 和 `tail()` 函数可以快速的显示对象的前面几个或者后面几个`部分`内容。
+
+对数据框来说，就是显示最前面几行或者最后面几行。
+
+* `head()` 显示前面几行。
+```{r data.frame_head}
+head(iris) # iris 是在基础包{datasets}中的数据集（数据框)
+head(iris, 10) # head() 函数中，有个参数 n, 表示显示的行数。
+head(iris$Sepal.Length)  # head() 函数对向量、矩阵、列表等对象都有效，对向量来说，默认就显示前6个元素
+```
+
+* `tail()` 显示最后几行。
+```{r data.frame_tail}
+tail(iris) #从最后一行倒数6行（默认）
+tail(iris, 8)
+tail(iris$Petal.Width)
+```
+
+
+## 筛选子集
+
+### 行列索引
+
+类似于向量的元素索引（类似于矩阵的索引），数据框筛选，也可使用行列向量筛选的方式。
+
+`data.frame[row,col]`，[,] 中括号中第一个数值是行号范围，第二个数值是列号范围。
+
+```{r data.frame_index}
+df[1,3] #定位一个元素
+df[1:2,2:3] #筛选行列限制的元素；1:2的结果是整数序列向量
+df[,-3] #行条件没有指定，则表明筛选所有行；负整数，表示除此之外的所有列
+df[df$num > 1.0,] #可以使用条件表达式（结果为逻辑型向量）筛选数据集
+```
+
+#### 随机筛选记录
+
+实例：在iris数据集中，随机筛选30%的记录数作为训练子集。
+```{r date.frame_random_subset}
+iris_df <- iris
+n <- nrow(iris_df)
+m <- round(n * 0.3) #round()函数是取数值的正整数
+index <- sample(1:n, m) #获得行索引，sample() 函数是从向量(1:n)中随机抽取指定个数(m)元素
+iris_r30 <- iris[index,] #
+head(iris_r30)
+```
+
+### 筛选子集 subset
+
+`subset()`函数，可以筛选数据库子集，中间的 `subset` 参数是逻辑表达式（过滤条件，相当于SQL中的where，筛选符合条件的记录，后面的参数 `select` 参数是字段的规则（通常是字段向量）。
+
+```{r date.frame_subset}
+
+sub_01 <- subset(iris_df, Sepal.Length >= 5.0) # 筛选 Sepal.Length 变量的值大于 5.0 的观测，所有变量
+sub_02 <- subset(iris_df, Sepal.Length >= 5.0 & Petal.Length > 1.5) # 两个逻辑表达式的可使用逻辑运算符组合:  “&” 是“和”，“|” 是“或”， “!”是“非”
+sub_03 <- subset(iris_df, Species == "setosa") # 相等用 "=="表示
+sub_04 <- subset(iris_df, Species %in% c("setosa","versicolor")) # 包含使用 "%in%" 这个符号，相当于SQL中的“in”（包含向量中的元素）
+
+sub_05 <- subset(iris_df, select = 1:4) # 1:4序列向量，表示筛选第1到第4个变量
+sub_06 <- subset(iris_df, select = -5) # 排除第5个变量
+sub_07 <- subset(iris_df, select = c(Sepal.Length, Petal.Length, Species)) # 筛选包含的几个变量（名称）
+
+sub_08 <- subset(iris_df, (Sepal.Length >= 5.0 | Petal.Length > 1.5) & !(Species == "setosa"), select = c(Sepal.Length, Petal.Length, Species)) # 使用多个表达式及其逻辑运算，筛选观测条件，并且只筛选其中的三个变量
+```
+
+在 `dplyr` 扩展包中，有对应的 `filter()` 函数来过滤记录，用 `select()` 来筛选字段，将其拆分为两个函数，各自更为简便些。
+
+
+## 排序
+
+`order()` 函数是获得向量的排序号，可以通过数据框筛选(索引)结合排序字段的序号来对数据框排序。
+
+```{r date.frame_order}
+df[order(df$int),]
+df[order(-df$num),]
+```
+
+在 `dplyr` 扩展包中，有一个更为便捷的函数 `arrange()` 来排序，类似与数据库中的 `order by`关键字。
+
+## 数据总览
+
+`summary()` 是对象的汇总函数，对数据框来说，会显示每个变量的汇总信息。对数值型分量，显示`最小值`、`一分位数`、`中位数`、`均值`、`三分位数`、`最大值`;对逻辑型分量，显示`模式`，`FALSE`和`TRUE`的个数，以及`NA`个数；对字符型分量，显示`长度`、`类`、`模式`；对因子分量，显示因子`水平`及其个数。
+
+```{r date.frame_summary}
+summary(df)
+summary(iris_df)
+```
+
+## 结构总览
+
+`str()` 是对象的结构概览，对数据框来说，显示对象的`类`(对数据框就是`data.frame`)，`观测`(`observation`)个数，`变量`(`variable`)个数；并显示某个分量的`类`信息，及其前10个值(元素)。
+
+```{r date.frame_str}
+str(df)
+str(iris_df)
+```
+
+## 唯一记录
+
+`unique()` 函数可以用来获得数据框对象的唯一记录，所有字段都重复的记录会被排除。
+
+
+```{r date.frame_unique}
+unique(df)
+df2 <- rbind(df,df[3,]) # df2目前有4行记录，其中第4行和第3行记录的值是完全一样的
+df2
+unique(df2) # 唯一记录和 df 是一样的
+```
+
+`unique()` 函数更多的是用在获取某个变量的唯一上，而非整个数据框的唯一(不同)记录。对分量的唯一值来说，我们更为关心的是字符型分量的唯一值，很少对数值型向量使用，对因子来说更为常用的是其水平。
+
+
+```{r date.frame_unique_vector}
+unique(iris_df$Petal.Length)
+unique(iris_df$Species) # 这里只有三个不同的值（三个不同种类的花）
+```

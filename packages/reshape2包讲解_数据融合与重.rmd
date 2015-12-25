@@ -1,0 +1,31 @@
+---
+title: "reshape2_数据融合与重塑"
+author: "lxh"
+date: "2015年7月28日"
+output: html_document
+---
+
+核心是两个函数：
+
+melt, cast (数据框是 dcast, 矩阵是 acast)
+
+melt 是融合，指定数据框中的变量哪些是 id.vars (维度), 哪些是 measure.vars (度量)
+
+dcast 是重塑（类似于数据透视表）
+```{r}
+cps.melt <- melt(cps.data,
+                 id.vars = c("sn","clickType","sl","tdomain","union"),
+                 measure.vars= c("mc")
+                 )
+
+
+cps.dcast <- dcast(cps.melt,
+                sn + sl + union + tdomain ~ variable, sum,
+                subset = .(tdomain == "douban.com", union == "wa")
+                )
+
+#将维度与度量结合，得到维度值的不同度量（行列转化）
+cps.dcast <- dcast(cps.melt,
+                sn + union ~ sl + variable, sum
+                )
+```

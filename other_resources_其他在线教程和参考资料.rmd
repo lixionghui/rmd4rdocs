@@ -1,0 +1,49 @@
+---
+title: R语言课程
+layout: default
+---
+
+系列课程
+
+## R语言初级课程(视频)
+
+讲师为"`肖凯`"，由"`数博思达`"于`2014年1月`发布。
+
+* [(1) R语言快速入门](http://v.youku.com/v_show/id_XNjYyNzczMTgw.html) 时长：18分53秒；内容：2.1 可视化基础知识 2.2 R语言中的可视化包 2.3 基本绘图函数 2.4 lattice包简介 2.5 ggplot2包简介。
+
+* [(2) R语言中的可视化函数](http://v.youku.com/v_show/id_XNjYyNzgwMjQw.html) 时长：19分18秒；内容：2.1 可视化基础知识 2.2 R语言中的可视化包 2.3 基本绘图函数 2.4 lattice包简介 2.5 ggplot2包简介。
+
+* [(3) R读取数据](http://v.youku.com/v_show/id_XNjYyNzg3MDIw.html) 时长：14分42秒。内容：本地文档的读写; 3.1.1 本地文本输出; 3.1.2 本地文本输入; 3.1.3 字符串的输入输出; 3.2数据表的读写; 3.3 数据库的读写; 3.4网页数据的读写。
+
+* [(4) 数据汇总plyr包](http://v.youku.com/v_show/id_XNjYyNzk2OTE2.html) 时长：18分35秒。内容：4.1 plyr包的主要函数：**ply 4.2 adply函数示例 4.3 其他辅助函数 4.4 案例与练习。
+
+* [(5) 回归分析](http://v.youku.com/v_show/id_XNjYyODA4NTky.html) 时长：18分35秒。内容：5.1 回归分析处理的问题； 5.2 回归估计； 5.2.1 lm函数； 5.2.2 T检验； 5.2.3 判定系数的意义； 5.2.4 模型预测； 5.3 虚拟变量回归； 5.4 回归诊断；。
+
+
+## R语言学习笔记(博客)
+
+### R语言基础
+
+作者为"`心内求法`"，由"`51CTO.com`"编辑整理。
+
+* [(1) R是什么](http://developer.51cto.com/art/201305/393121.htm) 内容：1.1 R初窥；2.2 R什么；2.3 R的核心理念；2.4 R的基本使用；2.5 帮助系统；2.6 学些资料。
+
+* [(2) 数据类型和数据结构](http://developer.51cto.com/art/201305/393125.htm) 内容：2.1 对象的类型和长度；2.2 访问对象中的元素；2.3 用序列填充对象；2.4 数据编辑器。
+
+* [(3) 绘图](http://developer.51cto.com/art/201305/393439.htm) 内容：3.1 高级绘图命令; 3.2 低级绘图命令。
+
+
+### R语言进阶
+
+作者为"`helloxxxxxx`"，由"`51CTO.com`"编辑整理。
+
+* [(1)用R语言对JPG/JPEG图片进行背景透明处理](http://developer.51cto.com/art/201305/393619.htm)
+
+* [(2) 文本（字符串）处理与正则表达式](http://developer.51cto.com/art/201305/393692.htm)
+
+* [(3) 数据汇总/透视/提炼](http://developer.51cto.com/art/201305/393920.htm)
+
+* [(4) 数据整形（reshape）](http://developer.51cto.com/art/201305/396615.htm)
+
+* [(5) 表达式、数学公式与特殊符号](http://developer.51cto.com/art/201306/396747.htm)
+
