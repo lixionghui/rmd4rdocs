@@ -1,0 +1,135 @@
+---
+title: "tidyr"
+author: "lixionghui"
+date: "2016年1月12日"
+output: html_document
+---
+
+# 概览
+
+## Tidy Data
+
+```{r}
+library("tidyr")
+```
+
+## dplyr + tiydr = reshape2
+
+
+
+# 主函数 Reshaping Data
+
+## gather
+
+`gather()`函数
+
+```{r, eval=FALSE}
+messy <- data.frame(name = c("Wilbur", "Petunia", "Gregory"),
+                    a = c(67, 80, 64),
+                    b = c(56, 90, 50)
+                    )
+#      name  a  b
+# 1 Gregory 64 50
+# 2 Petunia 80 90
+# 3  Wilbur 67 56
+
+
+
+
+gather(data = messy, key = xxx, value = yyy, select = a:b)
+# Arguments
+# key 是变形后字段 key 的名字， value 是变形后 value 的名字，相当于这里对key-value重命名
+# select = a:b 是筛选变形的key-value列，这里与 dplyr::select中的用法一致，实际上这里的 select 很重要，原始函数本身并未指定 select 这个名字，可以不写参数名或者任意，但这里使用 select 为更好
+# 理论上，key-value只有两列，其他的值为相应的保留
+
+# Result
+#      name xxx yyy
+# 1  Wilbur   a  67
+# 2 Petunia   a  80
+# 3 Gregory   a  64
+# 4  Wilbur   b  56
+# 5 Petunia   b  90
+# 6 Gregory   b  50
+
+```
+
+## spread
+
+`spread()`函数
+
+```{r, eval=FALSE}
+zzz <- gather(data = messy, key = xxx, value = yyy, a:b)
+# Result
+#      name xxx yyy
+# 1  Wilbur   a  67
+# 2 Petunia   a  80
+# 3 Gregory   a  64
+# 4  Wilbur   b  56
+# 5 Petunia   b  90
+# 6 Gregory   b  50
+
+spread(data = zzz, key = xxx, value = yyy) 
+# Arguments
+# 参数 key 和 value 是指定数据框中的哪些字段是key-value，与gather中去重命名是不一样的
+# 这里没有 select 参数去指定 key-value ，因为已经通过 key-value 指定
+# data 需要注意的是，数据集应该是唯一的，如果有重复记录会报错
+
+# Result
+#      name  a  b
+# 1 Gregory 64 50
+# 2 Petunia 80 90
+# 3  Wilbur 67 56
+
+
+
+
+
+zzt <- rbind(zzz, zzz[nrow(zzz),])
+# 在原数据集上增加一行重复记录（最后一行）
+
+# Result
+#      name xxx yyy
+# 1  Wilbur   a  67
+# 2 Petunia   a  80
+# 3 Gregory   a  64
+# 4  Wilbur   b  56
+# 5 Petunia   b  90
+# 6 Gregory   b  50
+# 7 Gregory   b  50
+
+
+spread(data = zzt, key = xxx, value = yyy)
+# Error: Duplicate identifiers for rows (6, 7)
+# 报错，出现重复的行标记
+
+spread(data = dplyr::distinct(zzt), key = xxx, value = yyy)
+# 使用 dplyr 中的 distinct() 函数排重重复记录即可
+
+zzt <- rbind(zzz, c("Gregory", "b",  51))
+
+zzt %>% dplyr::select(-yyy) %>% is.unique()
+spread(data = zzt, key = xxx, value = yyy)
+spread(data = dplyr::distinct(zzt), key = xxx, value = yyy)
+# Error: Duplicate identifiers for rows (6, 7)
+
+zzt <- rbind(zzz, c("Gregory", "a",  50))
+spread(data = zzt, key = xxx, value = yyy)
+spread(data = dplyr::distinct(zzt), key = xxx, value = yyy)
+# Error: Duplicate identifiers for rows (6, 7)
+
+# Duplicate identifiers for rows ：这里指的应该是 key 字段，与除去 value 字段之后剩余的字段（参与到 spread 的字段；不需要的可以 dplyr::select 排除)，不能有重复的情况，否则结果无法显示，类似与剩余的非value的字段分组计算
+
+
+is.unique <- function(x) {
+  return(nrow(unique(x)) == nrow(x))
+}
+
+is.unique(zzt)
+
+```
+
+# 辅函数
+
+## separate
+
+## unite

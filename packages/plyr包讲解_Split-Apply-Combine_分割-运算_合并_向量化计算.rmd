@@ -3,7 +3,65 @@ title: plyr
 layout: default
 ---
 
-# 实用函数
+```{r}
+library("plyr")
+```
+
+# Split-Apply-Combin
+
+## 概念
+
+作者对于plyr包的描述：plyr包针对的问题是，把一个庞大的数据结构拆分成多个片段（split），然后分别对这些片段应用函数（apply），然后再把片段函数结构组合起（combine）。
+
+例子：对被3除余数相同的数求和
+
+```{r}
+v1 <- c(1, 2, 3, 7, 10, 11, 12)
+f1 <- function(x) {
+  t1 <- x %% 3
+  t2 <- sum(t1)
+  return(t2)
+}
+laply(v1, f1)
+
+
+
+```
+
+对矩阵的每列求均值
+```{r}
+a <- matrix(1:21, nrow = 3, ncol=7)
+
+b <- aaply(a, .margins = 2, .fun = mean)
+# .margins 参数 1 是表示行， 2 表示列
+```
+
+# 主函数
+
+
+aaply
+```{r}
+a1 <- matrix(1:21, nrow = 3, ncol = 7)
+
+t1 <- aaply(a1, 1, mean)
+
+class(t1)
+
+typeof(t1)
+
+str(t1)
+
+attributes(t1)
+
+is.array(t1)
+is.matrix(t1)
+is.atomic(t1)
+is.vector(t1) # aaply 应用在矩阵上，返回的的是带名称属性的结果向量，名称为行或列的值(margins)；矩阵是二维数组，减少一维之后变为一维数组（也就是向量）。
+is.list(t1)
+
+```
+
+# 辅助函数
 
 
 ```{r}
@@ -23,7 +81,7 @@ f(1:10)
 each("min", "max")(1:10)
 each(c("min", "max"))(1:10)
 each(c(min, max))(1:10)
-# Call length(), min() and max() on a random normal vector
+# Call length(), min() and max on a random normal vector
 each(length, mean, var)(rnorm(100))
 ```
 
