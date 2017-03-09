@@ -5,6 +5,8 @@ date: "2015年7月28日"
 output: html_document
 ---
 
+
+```{r}
 CairoPDF(file = ifelse(onefile, "Rplots.pdf","Rplot%03d.pdf"),
          width = 6, height = 6, onefile = TRUE, family = "Helvetica",
          title = "R Graphics Output", fonts = NULL, version = "1.1",
@@ -50,3 +52,4 @@ install.packages("extrafont")
 library(extrafont)
 font_import()
 names(pdfFont()) # 已经有中文字体，如"Microsoft YaHei"，但依然不能成功；只能使用“GB1”能显示中文，但不能真正指定字体，且英文字体也很怪异。
+```
